@@ -6,8 +6,8 @@ UserModel = get_user_model()
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=250, unique=True)
-    slug = models.SlugField(unique=True, editable=False)
+    title = models.CharField(max_length=250)
+    slug = models.SlugField(editable=False)
     author = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     content = models.TextField()
     updated_on = models.DateTimeField(auto_now=True)
