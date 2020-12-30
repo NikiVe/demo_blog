@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog_app',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -126,5 +127,5 @@ STATICFILES_DIRS = (
     join(BASE_DIR, 'static'),
 )
 
-LOGIN_REDIRECT_URL = reverse_lazy('index')
-LOGIN_URL = reverse_lazy('sign in')
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
