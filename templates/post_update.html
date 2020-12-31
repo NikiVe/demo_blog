@@ -6,14 +6,17 @@ Edit
 
 {% block content %}
 {% if user.is_authenticated %}
-    <h3>Edit Post</h3>
-    <div class="form-group">
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn btn-primary">Edit</button>
-        </form>
-    </div>
+    {% if user.id == post.author_id %}
+        <h3>Edit Post</h3>
+        <div class="form-group">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p }}
+                <button class="btn btn-primary">Edit</button>
+            </form>
+        </div>
+    {% endif %}
 {% endif %}
 
 {% endblock %}

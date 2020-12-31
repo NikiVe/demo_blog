@@ -13,17 +13,30 @@ My post
     <hr>
     <br/>
 
-    {{ post.content }}
-
+    {{ post.content | safe }}
 
     <br/>
     <br/>
     {% if user.is_authenticated %}
-        <a href="{% url 'update post' post.pk %}" class="btn btn-primary">Edit</a>
+        {% if user.id == post.author_id %}
+            <a href="{% url 'update post' post.pk %}" class="btn btn-primary">Edit</a>
+        {% endif %}
     {% endif %}
 
     <br/>
-<br/>
-<a href="{% url 'home' %}" class="btn btn-primary">Back</a>
+    <br/>
+    <a href="{% url 'home' %}" class="btn btn-primary">Back</a>
+
+    <br/>
+    <hr>
+    <form action="{% url 'like post' post.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit" name="post_id" value="{{ post.id }}"
+        class="btn btn-primary btn-sm">Like </button> - {{ total_likes }}
+            {% if liked %}
+                Liked
+            {% endif %}
+    </form>
+
 
 {% endblock %}
