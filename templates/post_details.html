@@ -1,42 +1,61 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
 My post
 {% endblock %}
 
 {% block content %}
 
-    <h1>{{ post.title }}</h1>
-    <small> By {{ post.author.first_name }}
-        {{ post.author.last_name }} -
-        {{ post.created_on }}</small><br/>
-    <hr>
-    <br/>
+<h1>{{ post.title }}</h1>
+<small> By {{ post.author.first_name }}
+    {{ post.author.last_name }} -
+    {{ post.created_on }}</small><br/>
+<hr>
+<br/>
+{% if post.image %}
+<div class="d-inline p-2 w-50">
+    <img src="{{ post.image.url }}" class="w-50 rounded mx-auto d-block">
+</div>
+{% endif %}
+{{ post.content | safe }}
 
-    {{ post.content | safe }}
+<br/>
+<br/>
+{% if user.is_authenticated %}
+{% if user.id == post.author_id %}
+<a href="{% url 'update post' post.pk %}" class="btn btn-primary">Edit</a>
+{% endif %}
+{% endif %}
 
-    <br/>
-    <br/>
-    {% if user.is_authenticated %}
-        {% if user.id == post.author_id %}
-            <a href="{% url 'update post' post.pk %}" class="btn btn-primary">Edit</a>
-        {% endif %}
+<br/>
+<br/>
+<a href="{% url 'home' %}" class="btn btn-primary">Back</a>
+
+<br/>
+<hr>
+<form action="{% url 'like post' post.pk %}" method="post">
+    {% csrf_token %}
+    <button type="submit" name="post_id" value="{{ post.id }}"
+            class="btn btn-primary btn-sm">Like
+    </button>
+    - {{ total_likes }}
+    {% if liked %}
+    Liked
     {% endif %}
+</form>
 
-    <br/>
-    <br/>
-    <a href="{% url 'home' %}" class="btn btn-primary">Back</a>
+<br/>
+<br/>
 
-    <br/>
-    <hr>
-    <form action="{% url 'like post' post.pk %}" method="post">
-        {% csrf_token %}
-        <button type="submit" name="post_id" value="{{ post.id }}"
-        class="btn btn-primary btn-sm">Like </button> - {{ total_likes }}
-            {% if liked %}
-                Liked
-            {% endif %}
-    </form>
+{% if post.author.profile.profile_picture %}
+<div class="d-inline p-2 w-50">
+    <img src="{{ post.author.profile.profile_picture.url }}" width="200" height="200" >
+</div>
+{% else %}
+<div class="d-inline p-2 w-50">
+    <img src="{% static 'images/pp.jpg' %}" width="200" height="200" >
+</div>
+{% endif %}
 
 
 {% endblock %}
