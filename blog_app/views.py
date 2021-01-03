@@ -2,6 +2,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import generic
+from django.contrib.auth import mixins as auth_mixins
+
 
 from .forms import PostForm, EditPostForm
 from .models import Post, Category
@@ -36,7 +38,7 @@ class PostDetailView(generic.DetailView):
         return context
 
 
-class PostCreateView(generic.CreateView):
+class PostCreateView(auth_mixins.LoginRequiredMixin, generic.CreateView):
     template_name = 'post_create.html'
     model = Post
     form_class = PostForm
@@ -57,7 +59,7 @@ class PostCreateView(generic.CreateView):
         return super().form_valid(form)
 
 
-class PostUpdateView(generic.UpdateView):
+class PostUpdateView(auth_mixins.LoginRequiredMixin, generic.UpdateView):
     template_name = 'post_update.html'
     model = Post
     form_class = EditPostForm
@@ -70,13 +72,13 @@ class PostUpdateView(generic.UpdateView):
                        })
 
 
-class PostDeleteView(generic.DeleteView):
+class PostDeleteView(auth_mixins.LoginRequiredMixin, generic.DeleteView):
     template_name = 'post_delete.html'
     model = Post
     success_url = reverse_lazy('home')
 
 
-class CategoryCreateView(generic.CreateView):
+class CategoryCreateView(auth_mixins.LoginRequiredMixin, generic.CreateView):
     template_name = 'category_create.html'
     model = Category
     fields = '__all__'

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit profile
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    {% if user.id == profile.user_id %}
+        <h3>Edit profile</h3>
+        <div class="form-group">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-primary">Edit</button>
+            </form>
+        </div>
+    {% endif %}
+{% endif %}
+
+{% endblock %}

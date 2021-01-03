@@ -56,6 +56,8 @@ My post
     <img src="{% static 'images/pp.jpg' %}" width="200" height="200" >
 </div>
 {% endif %}
-
+<a href="{% url 'profile' post.author.profile.id %}">Profile page</a>
 
 {% endblock %}
+
+
