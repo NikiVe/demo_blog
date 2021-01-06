@@ -10,4 +10,6 @@ urlpatterns = [
     path('category/<str:cats>/', views.category_view, name='category'),
     path('category_list/', views.category_list_view, name='category list'),
     path('like/<int:pk>/', views.like_view, name='like post'),
+    path('comment/<int:pk>/<slug:slug>/', views.CommentView.as_view(), name='comment'),
+
 ]

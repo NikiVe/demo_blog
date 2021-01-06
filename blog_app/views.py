@@ -1,12 +1,31 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.contrib.auth import mixins as auth_mixins
 
 
-from .forms import PostForm, EditPostForm
-from .models import Post, Category
+from .forms import PostForm, EditPostForm, CommentForm
+from .models import Post, Category, Comment
+
+
+class CommentView(auth_mixins.LoginRequiredMixin, generic.CreateView):
+    form_class = CommentForm
+
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.user = self.request.user
+        comment.post = Post.objects.get(pk=self.kwargs['pk'])
+        comment.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('post details',
+                       kwargs={
+                           'pk': self.object.post.pk,
+                           'slug': self.object.post.slug,
+                       })
 
 
 class PostListView(generic.ListView):
@@ -18,6 +37,7 @@ class PostListView(generic.ListView):
         cat_menu = Category.objects.all()
         context = super().get_context_data(*args, **kwargs)
         context['cat_menu'] = cat_menu
+
         return context
 
 
@@ -30,10 +50,14 @@ class PostDetailView(generic.DetailView):
         post = get_object_or_404(Post, id=self.kwargs['pk'])
         total_likes = post.total_likes()
         liked = post.likes.filter(id=self.request.user.id).first()
+        comments = Comment.objects.all().order_by('-pk')
 
         context['cat_menu'] = Category.objects.all()
         context['total_likes'] = total_likes
         context['liked'] = liked
+        context['form'] = CommentForm()
+        context['comments'] = comments
+
 
         return context
 
@@ -119,3 +143,6 @@ def like_view(request, pk):
         'pk': post.pk,
         'slug': post.slug,
     }))
+
+
+

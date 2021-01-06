@@ -40,5 +40,9 @@ class Post(models.Model):
         return super().save(*args, **kwargs)
 
 
+class Comment(models.Model):
+    text = models.TextField(blank=False)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
 
 
