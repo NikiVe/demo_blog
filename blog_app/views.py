@@ -12,7 +12,6 @@ from .models import Post, Category, Comment
 class CommentView(auth_mixins.LoginRequiredMixin, generic.CreateView):
     form_class = CommentForm
 
-
     def form_valid(self, form):
         comment = form.save(commit=False)
         comment.user = self.request.user

@@ -3,12 +3,17 @@ from django.contrib import admin
 from .models import Post, Category, Comment
 
 
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id',)
-    list_filter = ('id',)
+class CommentInline(admin.StackedInline):
+    model = Comment
 
 
-admin.site.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('created_on', 'title', 'author', 'category', 'id')
+
+    inlines = (CommentInline,)
+
+
+admin.site.register(Post, PostAdmin)
 admin.site.register(Category)
 admin.site.register(Comment)
 
