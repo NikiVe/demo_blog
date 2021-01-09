@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from .models import Profile
-from .forms import SignUpForm, UserEditForm, PasswordsChangeForm
+from .forms import SignUpForm, UserEditForm, PasswordsChangeForm, ProfileForm
 from django.contrib.auth import forms
 
 
@@ -13,7 +13,8 @@ class EditProfilePageView(generic.UpdateView):
     model = Profile
     template_name = 'registration/edit_profile_page.html'
     success_url = reverse_lazy('home')
-    fields = ('bio', 'profile_picture', 'fb_url', 'twitter_url', 'instagram')
+    form_class = ProfileForm
+    # fields = ('bio', 'profile_picture', 'fb_url', 'twitter_url', 'instagram')
 
 
 class ProfilePageView(generic.DetailView):

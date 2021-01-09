@@ -49,14 +49,13 @@ class PostDetailView(generic.DetailView):
         post = get_object_or_404(Post, id=self.kwargs['pk'])
         total_likes = post.total_likes()
         liked = post.likes.filter(id=self.request.user.id).first()
-        comments = Comment.objects.all().order_by('-pk')
+        comments = post.comment_set.all().order_by('-id')
 
         context['cat_menu'] = Category.objects.all()
         context['total_likes'] = total_likes
         context['liked'] = liked
         context['form'] = CommentForm()
         context['comments'] = comments
-
 
         return context
 
